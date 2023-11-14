@@ -1,0 +1,25 @@
+version: "3.8"
+
+networks:
+    pika-test:
+
+services:
+    rabbitmq:
+        image: rabbitmq:3.12-management
+        restart: unless-stopped
+        volumes:
+            - "./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
+        environment:
+            - RABBITMQ_DEFAULT_USER=root
+            - RABBITMQ_DEFAULT_PASS=1234
+        hostname: rabbitmq-pika-test
+        ports:
+            - '5672:5672'
+            - '15672:15672'
+        networks:
+            - pika-test
+
+    pika-app:
+        build: ./
+        networks:
+            - pika-test
